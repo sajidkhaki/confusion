@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardImgOverlay,CardTitle,CardBody,CardText} from "reactstrap";
+import { Card, CardImg, CardImgOverlay, CardTitle, CardBody, CardText } from "reactstrap";
 
 class Menu extends Component {
     constructor(props) {  // Here we initiate component property.
@@ -9,54 +9,82 @@ class Menu extends Component {
         };
     }
     onDishSelect(dish) {
-        this.setState({ selectedDish: dish});
+        this.setState({ selectedDish: dish });
     }
 
+
     renderDish(dish) {
-        if (dish != null)
-            return(
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
+        if (dish != null) {
+            return (
+                <div>
+                    <div className='row'>
+                        <div key={dish.id} className="col-12 col-md-5 m-3">
+                            <Card>
+                                <CardImg width='100%' src={dish.image} alt={dish.name} />
+                                <CardBody>
+                                    <CardTitle>{dish.name}</CardTitle>
+                                    <CardText> {dish.description}</CardText>
+                                </CardBody>
+                            </Card>
+                        </div>
+                        <div className='col-12 col-md-5 m-3'>
+                            <h4>Comments</h4>
+                            {dish.comments.map((comment) => {
+                                return (
+                                    <div key={comment.id}>
+                                        <ul className='list-unstyled'>
+                                            <li>
+                                                {comment.comment}
+                                                <p> -- {comment.author}, {}
+                                                    {new Intl.DateTimeFormat('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: '2-digit'
+                                                    }).format(new Date(comment.date))}
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                )
+                            }
+                            )}
+                        </div>
+                    </div>
+                </div>
             );
-        else
-            return(
+        } else
+            return (
                 <div></div>
             );
     }
 
-    render()
-    {
-        let menu = this.props.dishes.map((dish)=>{
+
+    render() {
+        let menu = this.props.dishes.map((dish) => {
             return (
-                <div  className="col-12 col-md-5 m-1">
-                    <Card key={dish.id}
-                          onClick={() => this.onDishSelect(dish)}>
+                <div key={dish.id} className="col-12 col-md-5 m-2">
+                    <Card
+                        onClick={() => this.onDishSelect(dish)}
+                    >
                         <CardImg width="100%" src={dish.image} alt={dish.name} />
                         <CardImgOverlay>
                             <CardTitle>{dish.name}</CardTitle>
-                            {/* <p>{dish.description}</p>*/}
                         </CardImgOverlay>
                     </Card>
                 </div>
             );
         })
-        return(
-            <div className='container'>
-                <div className='row'>
+        return (
+            <div className="container">
+                <div className="row">
                     {menu}
                 </div>
                 <div className="row">
-                    <div className="col-12 col-md-8 m-1">
-                        {this.renderDish(this.state.selectedDish)}
-                    </div>
+                    {this.renderDish(this.state.selectedDish)}
                 </div>
             </div>
         )
     }
+
 }
 export default Menu;
